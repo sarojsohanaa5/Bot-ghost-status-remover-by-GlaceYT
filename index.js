@@ -1,119 +1,236 @@
-/**
- ██████╗░████████╗██╗░░██╗           
- ██╔══██╗╚══██╔══╝╚██╗██╔╝          
- ██████╔╝░░░██║░░░░╚███╔╝░          
- ██╔══██╗░░░██║░░░░██╔██╗░          
- ██║░░██║░░░██║░░░██╔╝╚██╗          
- ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝          
-  GIT : https://github.com/RTX-GAMINGG/Bot-ghost-status-remover-by-RTX
-  DISCORD SERVER : https://discord.gg/FUEHs7RCqz
-  YOUTUBE : https://www.youtube.com/channel/UCPbAvYWBgnYhliJa1BIrv0A
- * **********************************************
- *   Code by RTX GAMING
- * **********************************************
- */
+const Discord = require("discord.js");
+const client = new Discord.Client();
 
+var prefix = ";"; // تعديل مهم جدا
+var statuses = [``];
+var timers = 1;
+const owners = ["924009309497597952"];
 
-
-const { Client, GatewayIntentBits, ActivityType, TextChannel } = require('discord.js');
-require('dotenv').config();
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const client = new Client({
-  intents: Object.keys(GatewayIntentBits).map((a) => {
-    return GatewayIntentBits[a];
-  }),
-});
-const app = express();
-const port = 3000;
-app.get('/', (req, res) => {
-  res.send('YaY Your Bot Status Changed✨');
-});
-app.listen(port, () => {
-  console.log(`🔗 Listening to RTX: http://localhost:${port}`);
-  console.log(`🔗 Powered By RTX`);
+client.on("ready", () => {
+  console.log(`Logged in as ${client.user.tag}`);
+  client.user.setStatus("dnd");
+  var timeing = Math.floor(timers * 0000);
+  setInterval(function() {
+    var lengthesof = statuses.length;
+    var amounter = Math.floor(Math.random() * lengthesof);
+    client.user.setActivity(statuses[amounter], { type: "" });
+  }, timeing);
 });
 
+require('http').createServer((req, res) => res.end('Drake babamın botu aktif')).listen(3000)
+ console.log(`Connected`);
 
-const statusMessages = ["Paying All ","Inviters✨"];
-
-
-let currentIndex = 0;
-const channelId = '';
-
-async function login() {
-  try {
-    await client.login(process.env.TOKEN);
-    console.log(`\x1b[36m%s\x1b[0m`, `|    🐇 Logged in as ${client.user.tag}`);
-  } catch (error) {
-    console.error('Failed to log in:', error);
-    process.exit(1);
+client.on("message", message => {
+  if (message.content.toLowerCase().startsWith(prefix + "help".toLowerCase())) {
+    message.react("✔");
+    let help = new Discord.MessageEmbed()
+      .setTimestamp()
+      .setAuthor(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      )
+      .setFooter(`Developed by Matter `, client.user.displayAvatarURL())
+      .setThumbnail(client.user.displayAvatarURL())
+      .setDescription(
+        `> **${client.user.username} 's Help commands\n> Available Commands : " 6 " Command\n> Prefix : \`${prefix}\`**\n> **Language : English :flag_gb:**`
+      )
+      .addFields(
+        {
+          name: "Public",
+          value: `\`${prefix}bc\` , \`${prefix}obc\`, \`${prefix}ping\``
+        },
+        {
+          name: "Admins",
+          value: `\`${prefix}setname\` , \`${prefix}setavatar\` `
+        },
+        {
+          name: "Extra",
+          value: `\`invite\` , \`help\``
+        }
+      );
+    message.channel.send(help);
   }
-}
-
-/**
- ██████╗░████████╗██╗░░██╗           
- ██╔══██╗╚══██╔══╝╚██╗██╔╝          
- ██████╔╝░░░██║░░░░╚███╔╝░          
- ██╔══██╗░░░██║░░░░██╔██╗░          
- ██║░░██║░░░██║░░░██╔╝╚██╗          
- ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝          
-GIT : https://github.com/RTX-GAMINGG/Bot-ghost-status-remover-by-RTX
-  DISCORD SERVER : https://discord.gg/FUEHs7RCqz
-  YOUTUBE : https://www.youtube.com/channel/UCPbAvYWBgnYhliJa1BIrv0A
- * **********************************************
- *   Code by RTX GAMING
- * **********************************************
- */
-
-
-function updateStatusAndSendMessages() {
-  const currentStatus = statusMessages[currentIndex];
-  const nextStatus = statusMessages[(currentIndex + 1) % statusMessages.length];
-
-  client.user.setPresence({
-    activities: [{ name: currentStatus, type: ActivityType.Custom}],
-    status: 'dnd',
-  });
-
-  
-  const textChannel = client.channels.cache.get(channelId);
-
-  if (textChannel instanceof TextChannel) {
-   
-    textChannel.send(`Bot status is: ${currentStatus}`);
-  } else {
-
-  }
-
-  currentIndex = (currentIndex + 1) % statusMessages.length;
-}
-
-client.once('ready', () => {
-  console.log(`\x1b[36m%s\x1b[0m`, `|    ✅ Bot is ready as ${client.user.tag}`);
-  console.log(`\x1b[36m%s\x1b[0m`, `|    ✨HAPPY NEW YEAR MY DEAR FAMILY`);
-  console.log(`\x1b[36m%s\x1b[0m`, `|    ❤️WELCOME TO 2024`);
-  updateStatusAndSendMessages();
-
-  setInterval(() => {
-    updateStatusAndSendMessages();
-  }, 10000);
 });
 
-login();
+client.on("message", message => {
+  if (message.content.startsWith(prefix + "bc")) {
+    if (!message.member.hasPermission("ADMINISTRATOR")) return;
 
-/**
- ██████╗░████████╗██╗░░██╗           
- ██╔══██╗╚══██╔══╝╚██╗██╔╝          
- ██████╔╝░░░██║░░░░╚███╔╝░          
- ██╔══██╗░░░██║░░░░██╔██╗░          
- ██║░░██║░░░██║░░░██╔╝╚██╗          
- ╚═╝░░╚═╝░░░╚═╝░░░╚═╝░░╚═╝          
-GIT : https://github.com/RTX-GAMINGG/Bot-ghost-status-remover-by-RTX
-  DISCORD SERVER : https://discord.gg/FUEHs7RCqz
-  YOUTUBE : https://www.youtube.com/channel/UCPbAvYWBgnYhliJa1BIrv0A
- * **********************************************
- *   Code by RTX GAMING
- * **********************************************
- */
+    message.delete();
+    let args = message.content
+      .split(" ")
+      .slice(1)
+      .join(" ");
+    let noargs = new Discord.MessageEmbed()
+      .setAuthor(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      )
+      .addField(`Error :x:`, `Please type your broadcast message !`)
+      .setTimestamp()
+      .setFooter(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      );
+    if (!args) return message.channel.send(message.author, noargs);
+    message.guild.members.cache
+      .filter(m => m.presence.status !== "everyone")
+      .forEach(m => {
+        if (m.user.bot) return;
+        m.send(`${args}\n ${m}`)
+          .then(() => {
+            console.log(`I Could Send To : ${m.user.tag} ✅`);
+          })
+          .catch(function() {
+            console.log(`I Couldn't Send To : ${m.user.tag} ❌ `);
+          });
+      });
+    let embed = new Discord.MessageEmbed()
+      .setAuthor(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      )
+      .setDescription(
+        `📬 : Messages Sending : \`${
+          message.guild.members.cache.filter(
+            m => m.presence.status !== "online"
+          ).size
+        }\` `
+      )
+      .setTimestamp()
+      .setFooter(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      );
+    message.channel
+      .send(`جـاري الارسال الرساله الى جميع الاعضاء ..`)
+      .then(me => {
+        me.edit(message.author, embed);
+      });
+  }
+});
+
+client.on("message", message => {
+  if (message.content.startsWith(prefix + "obc")) {
+    if (!message.member.hasPermission("ADMINISTRATOR")) return;
+
+    message.delete();
+    let args = message.content
+      .split(" ")
+      .slice(1)
+      .join(" ");
+    let noargs = new Discord.MessageEmbed()
+      .setAuthor(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      )
+      .addField(`Error :x:`, `Please type your broadcast message !`)
+      .setTimestamp()
+      .setFooter(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      );
+    if (!args) return message.channel.send(message.author, noargs);
+    message.guild.members.cache
+      .filter(m => m.presence.status !== "offline")
+      .forEach(m => {
+        if (m.user.bot) return;
+        m.send(`${args}\n ${m}`)
+          .then(() => {
+            console.log(`I Could Send To : ${m.user.tag} ✅`);
+          })
+          .catch(function() {
+            console.log(`I Couldn't Send To : ${m.user.tag} ❌ `);
+          });
+      });
+    let embed = new Discord.MessageEmbed()
+      .setAuthor(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      )
+      .setDescription(
+        `📬 : تـم ارسـال رسـالـتـك الـى : \`${
+          message.guild.members.cache.filter(
+            m => m.presence.status !== "offline"
+          ).size
+        }\` `
+      )
+      .setTimestamp()
+      .setFooter(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      );
+    message.channel
+      .send(`جـاري الارسال الرساله الى جميع الاعضاء ..`)
+      .then(me => {
+        me.edit(message.author, embed);
+      });
+  }
+});
+
+client.on("message", async message => {
+  if (message.content.startsWith(prefix + "ping")) {
+    message.channel.send("Pinging..").then(m => {
+      m.edit(
+        `\`\`\`javascript\nDiscord API : ${Math.round(
+          client.ws.ping
+        )} ms\n\`\`\` `
+      );
+    });
+  }
+   if (message.content.startsWith(prefix + "invite")) {
+    message.channel.send("creating an invite link..").then(m => {
+      let embed = new Discord.MessageEmbed()
+      .setAuthor(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      )
+      .setTitle(`Invite Me`)
+      .setURL(`https://discord.com/api/oauth2/authorize?client_id=${client.user.id}&permissions=8&scope=bot`)
+       .setTimestamp()
+      .setFooter(
+        message.author.username,
+        message.author.displayAvatarURL({ dynamic: true })
+      );
+      m.edit(embed
+      );
+    });
+  }
+});
+
+client.on("message", message => {
+  if (message.content.startsWith(prefix + "setname")) {
+    let args = message.content.split(" ");
+    let botnameee = args.slice(1).join(" ");
+    if (!owners.includes(message.author.id))
+      return message.channel.send(
+        `** :x: Only Owners Can   Use this Command **`
+      );
+    if (!botnameee)
+      return message.channel.send(
+        `** :x: Please Provide me a name for the bot !**`
+      );
+    client.user.setUsername(`${botnameee}`);
+    message.channel.send(`Changing The bot's Name ...`).then(me => {
+      me.edit(` Done !`);
+    });
+  }
+  if (message.content.startsWith(prefix + "setavatar")) {
+    let args = message.content.split(" ");
+    let botnameee = args.slice(1).join(" ");
+    if (!owners.includes(message.author.id))
+      return message.channel.send(
+        `** :x: Only Owners Can   Use this Command **`
+      );
+    if (!botnameee)
+      return message.channel.send(
+        `** :x: Please Provide me an avatar for the bot !**`
+      );
+    client.user.setAvatar(`${botnameee}`);
+    message.channel.send(`Changing The bot's Avatar ...`).then(me => {
+      me.edit(` Done !`);
+    });
+  }
+});
+
+client.login(process.env.token);
